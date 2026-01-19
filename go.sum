@@ -1,7 +1,7 @@
 github.com/agentplexus/omnivoice v0.2.0 h1:r8SP5fCVE88ZrGESE0QYBY1vVMeLtRWKhcwsaIaSiVE=
 github.com/agentplexus/omnivoice v0.2.0/go.mod h1:LfxHfgrgrBg5isbaggYMpnwkN+zrCD1ziQA6StOMvkQ=
-github.com/deepgram/deepgram-go-sdk/v3 v3.0.0 h1:RceNVVzSJp88Gi03hsT8ZE5anHVARz05K7yaIG52pqk=
-github.com/deepgram/deepgram-go-sdk/v3 v3.0.0/go.mod h1:GIPd2eqO3BXcvL5+VHCmEP0kqnp+cwwWw75Cdnfa0A4=
+github.com/deepgram/deepgram-go-sdk/v3 v3.5.0 h1:ug48j1DVNRKrkXti18/aFT3NP5HV2Q2CN3QMwTvHmy4=
+github.com/deepgram/deepgram-go-sdk/v3 v3.5.0/go.mod h1:wVr0PDvlJFWVLUmf65u+K80SJVf/PUWvkFFubGPW/As=
 github.com/dvonthenen/websocket v1.5.1-dyv.2 h1:OXlWJJkeHt8k4+MEI0Y8SQjY2ihHYD2z/tI7sZZfsnA=
 github.com/dvonthenen/websocket v1.5.1-dyv.2/go.mod h1:q2GbopbpFJvBP4iqVvqwwahVmvu2HnCfdqCWDoQVKMM=
 github.com/fatih/color v1.18.0 h1:S8gINlzdQ840/4pfAwic/ZE0djQEH3wM94VfqLTZcOM=
