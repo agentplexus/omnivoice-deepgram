@@ -1,0 +1,31 @@
+{
+  "ir_version": "1.0",
+  "project": "omnivoice-deepgram",
+  "repository": "https://github.com/agentplexus/omnivoice-deepgram",
+  "versioning": "semver",
+  "commit_convention": "conventional",
+  "maintainers": ["johncwang@gmail.com"],
+  "releases": [
+    {
+      "version": "v0.1.0",
+      "date": "2026-01-19",
+      "highlights": [
+        { "description": "OmniVoice STT provider for Deepgram with real-time streaming transcription support" }
+      ],
+      "added": [
+        { "description": "Streaming STT provider implementing `stt.StreamingProvider` interface" },
+        { "description": "Real-time transcription via Deepgram WebSocket API" },
+        { "description": "Support for telephony audio formats: mu-law, a-law, linear16, FLAC, Opus, MP3" },
+        { "description": "Interim and final transcription results with word-level timing" },
+        { "description": "Speech start/end detection via `SpeechStarted` and `UtteranceEnd` callbacks" },
+        { "description": "Speaker diarization support with configurable max speakers" },
+        { "description": "Keyword boosting for domain-specific vocabulary" },
+        { "description": "Configuration converter from OmniVoice `TranscriptionConfig` to Deepgram options" }
+      ],
+      "documentation": [
+        { "description": "README with installation, usage examples, and configuration reference" },
+        { "description": "Package documentation with streaming transcription examples" }
+      ]
+    }
+  ]
+}
