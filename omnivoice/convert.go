@@ -160,11 +160,11 @@ type Alternative struct {
 
 // Word represents a transcribed word with timing.
 type Word struct {
-	Word       string   `json:"word,omitempty"`
-	Start      float64  `json:"start,omitempty"`
-	End        float64  `json:"end,omitempty"`
-	Confidence float64  `json:"confidence,omitempty"`
-	Speaker    *int     `json:"speaker,omitempty"`
+	Word       string  `json:"word,omitempty"`
+	Start      float64 `json:"start,omitempty"`
+	End        float64 `json:"end,omitempty"`
+	Confidence float64 `json:"confidence,omitempty"`
+	Speaker    *int    `json:"speaker,omitempty"`
 }
 
 // formatSpeaker formats a speaker ID for OmniVoice.

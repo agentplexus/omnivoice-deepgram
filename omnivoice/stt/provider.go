@@ -10,8 +10,8 @@ import (
 
 	"github.com/agentplexus/omnivoice-deepgram/omnivoice"
 	"github.com/agentplexus/omnivoice/stt"
-	client "github.com/deepgram/deepgram-go-sdk/v3/pkg/client/listen"
 	wsinterfaces "github.com/deepgram/deepgram-go-sdk/v3/pkg/api/listen/v1/websocket/interfaces"
+	client "github.com/deepgram/deepgram-go-sdk/v3/pkg/client/listen"
 )
 
 // Verify interface compliance at compile time.
