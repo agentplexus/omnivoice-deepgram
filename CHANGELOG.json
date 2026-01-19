@@ -13,18 +13,18 @@
         { "description": "OmniVoice STT provider for Deepgram with real-time streaming transcription support" }
       ],
       "added": [
-        { "description": "Streaming STT provider implementing `stt.StreamingProvider` interface" },
-        { "description": "Real-time transcription via Deepgram WebSocket API" },
-        { "description": "Support for telephony audio formats: mu-law, a-law, linear16, FLAC, Opus, MP3" },
-        { "description": "Interim and final transcription results with word-level timing" },
-        { "description": "Speech start/end detection via `SpeechStarted` and `UtteranceEnd` callbacks" },
-        { "description": "Speaker diarization support with configurable max speakers" },
-        { "description": "Keyword boosting for domain-specific vocabulary" },
-        { "description": "Configuration converter from OmniVoice `TranscriptionConfig` to Deepgram options" }
+        { "description": "Streaming STT provider implementing `stt.StreamingProvider` interface", "commit": "f8fb090" },
+        { "description": "Real-time transcription via Deepgram WebSocket API", "commit": "f8fb090" },
+        { "description": "Support for telephony audio formats: mu-law, a-law, linear16, FLAC, Opus, MP3", "commit": "f8fb090" },
+        { "description": "Interim and final transcription results with word-level timing", "commit": "f8fb090" },
+        { "description": "Speech start/end detection via `SpeechStarted` and `UtteranceEnd` callbacks", "commit": "f8fb090" },
+        { "description": "Speaker diarization support with configurable max speakers", "commit": "f8fb090" },
+        { "description": "Keyword boosting for domain-specific vocabulary", "commit": "f8fb090" },
+        { "description": "Configuration converter from OmniVoice `TranscriptionConfig` to Deepgram options", "commit": "f8fb090" }
       ],
       "documentation": [
-        { "description": "README with installation, usage examples, and configuration reference" },
-        { "description": "Package documentation with streaming transcription examples" }
+        { "description": "README with installation, usage examples, and configuration reference", "commit": "3cc5c41" },
+        { "description": "Package documentation with streaming transcription examples", "commit": "3cc5c41" }
       ]
     }
   ]
