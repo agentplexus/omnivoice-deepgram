@@ -7,6 +7,45 @@
   "maintainers": ["johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.2.0",
+      "date": "2026-01-24",
+      "highlights": [
+        { "description": "Text-to-Speech (TTS) provider with streaming support and LLM integration" }
+      ],
+      "added": [
+        { "description": "TTS provider implementing `tts.Provider` and `tts.StreamingProvider` interfaces", "commit": "0f554ae" },
+        { "description": "`Synthesize` method for non-streaming TTS via Deepgram REST API", "commit": "0f554ae" },
+        { "description": "`SynthesizeStream` method for streaming TTS via Deepgram WebSocket API", "commit": "0f554ae" },
+        { "description": "`SynthesizeFromReader` method for streaming LLM output directly to TTS", "commit": "0f554ae" },
+        { "description": "`ListVoices` method returning available Deepgram Aura voices", "commit": "0f554ae" },
+        { "description": "`GetVoice` method for voice lookup by ID", "commit": "0f554ae" },
+        { "description": "Automatic sentence splitting for natural speech synthesis", "commit": "0f554ae" },
+        { "description": "Support for TTS output formats: mp3, linear16, mulaw, alaw, opus, flac", "commit": "0f554ae" },
+        { "description": "Configuration converter from OmniVoice `SynthesisConfig` to Deepgram options", "commit": "0f554ae" },
+        { "description": "Static voice list with 17 Aura voices (Aura 1 and Aura 2)", "commit": "0f554ae" },
+        { "description": "TTS conformance tests using omnivoice `providertest` package", "commit": "854e14d" },
+        { "description": "STT conformance tests using omnivoice `providertest` package", "commit": "854e14d" }
+      ],
+      "fixed": [
+        { "description": "STT provider initialization uses `sync.Once` to prevent flag redefinition panic", "commit": "8a584f7" }
+      ],
+      "documentation": [
+        { "description": "README updated with TTS usage examples and feature tables", "commit": "f0b3696" },
+        { "description": "PRD.md updated with TTS implementation status", "commit": "f0b3696" },
+        { "description": "TRD_TTS.md technical design document for TTS implementation", "commit": "f0b3696" },
+        { "description": "ROADMAP.md tracking planned features (STT Batch) and completed items", "commit": "f0b3696" }
+      ],
+      "tests": [
+        { "description": "Unit tests for TTS config conversion functions", "commit": "854e14d" },
+        { "description": "Unit tests for TTS provider methods", "commit": "854e14d" },
+        { "description": "Unit tests for sentence splitting logic", "commit": "854e14d" },
+        { "description": "Integration tests for TTS (requires DEEPGRAM_API_KEY)", "commit": "854e14d" }
+      ],
+      "dependencies": [
+        { "description": "Bump `github.com/agentplexus/omnivoice` from v0.2.0 to v0.3.0", "commit": "0f554ae" }
+      ]
+    },
+    {
       "version": "v0.1.0",
       "date": "2026-01-19",
       "highlights": [
