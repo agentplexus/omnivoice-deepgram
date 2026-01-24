@@ -6,11 +6,80 @@
 [![Docs][docs-godoc-svg]][docs-godoc-url]
 [![License][license-svg]][license-url]
 
-OmniVoice provider implementation for [Deepgram](https://deepgram.com/) speech-to-text services.
+OmniVoice provider implementation for [Deepgram](https://deepgram.com/) speech-to-text and text-to-speech services.
 
-This package adapts the official [Deepgram Go SDK](https://github.com/deepgram/deepgram-go-sdk) to the [OmniVoice](https://github.com/agentplexus/omnivoice) interfaces, enabling Deepgram's speech-to-text capabilities within the OmniVoice framework.
+This package adapts the official [Deepgram Go SDK](https://github.com/deepgram/deepgram-go-sdk) to the [OmniVoice](https://github.com/agentplexus/omnivoice) interfaces, enabling Deepgram's STT and TTS capabilities within the OmniVoice framework.
+
+## OmniVoice Feature Support
+
+This table shows which [OmniVoice](https://github.com/agentplexus/omnivoice) abstracted capabilities are supported by this provider.
+
+### Core Voice Capabilities
+
+| Capability | Supported | Notes |
+|------------|:---------:|-------|
+| **STT (Speech-to-Text)** | ✅ | Primary capability |
+| STT Streaming | ✅ | Real-time via WebSocket |
+| STT Batch | ❌ | Not yet implemented |
+| STT File | ❌ | Not yet implemented |
+| STT URL | ❌ | Not yet implemented |
+| **TTS (Text-to-Speech)** | ✅ | Aura voices via REST and WebSocket |
+| TTS Synthesize | ✅ | Non-streaming via REST API |
+| TTS Streaming | ✅ | Real-time via WebSocket |
+| TTS Voice List | ✅ | Static list of Aura voices |
+| **Voice Agent** | — | N/A (use with agent orchestration) |
+
+### STT Features
+
+| Feature | Supported | Notes |
+|---------|:---------:|-------|
+| Interim results | ✅ | Real-time partial transcripts |
+| Final results | ✅ | Complete utterance transcripts |
+| Speech start detection | ✅ | `EventSpeechStart` events |
+| Speech end detection | ✅ | `EventSpeechEnd` / utterance end |
+| Speaker diarization | ✅ | Multi-speaker identification |
+| Keyword boosting | ✅ | Boost specific terms |
+| Punctuation | ✅ | Optional auto-punctuation |
+| Word-level timestamps | ✅ | Per-word timing data |
+| Confidence scores | ✅ | Per-word and per-utterance |
+
+### TTS Features
+
+| Feature | Supported | Notes |
+|---------|:---------:|-------|
+| Non-streaming synthesis | ✅ | REST API returns full audio |
+| Streaming synthesis | ✅ | WebSocket streams audio chunks |
+| Streaming input | ✅ | Pipe LLM output directly to TTS |
+| Sentence splitting | ✅ | Automatic splitting for natural speech |
+| Voice selection | ✅ | Aura 1 and Aura 2 voices |
+| Output formats | ✅ | mp3, linear16, mulaw, alaw, opus, flac |
+| Sample rate control | ✅ | Configurable output sample rate |
+
+### Transport Layer
+
+| Transport | Supported | Notes |
+|-----------|:---------:|-------|
+| WebSocket | ✅ | Native streaming transport |
+| HTTP | ❌ | Batch API not yet implemented |
+| WebRTC | — | Use with transport provider |
+| SIP | — | Use with transport provider |
+| PSTN | — | Use with transport provider |
+
+### Call System Integration
+
+| Call System | Supported | Notes |
+|-------------|:---------:|-------|
+| Twilio | — | Use with [omnivoice-twilio](https://github.com/agentplexus/omnivoice-twilio) |
+| RingCentral | — | Use with call system provider |
+| Zoom | — | Use with call system provider |
+| LiveKit | — | Use with call system provider |
+| Daily | — | Use with call system provider |
+
+**Legend:** ✅ Supported | ❌ Not implemented | — Not applicable (use with other providers)
 
 ## Features
+
+### Speech-to-Text (STT)
 
 - Real-time streaming transcription via WebSocket
 - Support for telephony audio formats (mu-law, a-law)
@@ -18,6 +87,16 @@ This package adapts the official [Deepgram Go SDK](https://github.com/deepgram/d
 - Speech start/end detection for natural turn-taking
 - Speaker diarization support
 - Keyword boosting
+
+### Text-to-Speech (TTS)
+
+- Non-streaming synthesis via REST API
+- Real-time streaming synthesis via WebSocket
+- Streaming input support (pipe LLM output directly to TTS)
+- Automatic sentence splitting for natural speech
+- Multiple Aura voices (male/female, US/UK/IE accents)
+- Multiple output formats (mp3, linear16, mulaw, opus, etc.)
+- Configurable sample rate
 
 ## Installation
 
@@ -78,9 +157,114 @@ for event := range events {
 }
 ```
 
+### Basic Text-to-Speech
+
+```go
+import (
+    deepgramtts "github.com/agentplexus/omnivoice-deepgram/omnivoice/tts"
+    "github.com/agentplexus/omnivoice/tts"
+)
+
+// Create TTS provider with API key
+provider, err := deepgramtts.New(deepgramtts.WithAPIKey("your-api-key"))
+if err != nil {
+    log.Fatal(err)
+}
+
+// Configure synthesis
+config := tts.SynthesisConfig{
+    VoiceID:      "aura-asteria-en",  // Female US voice
+    OutputFormat: "mp3",
+    SampleRate:   24000,
+}
+
+// Synthesize text to speech
+result, err := provider.Synthesize(ctx, "Hello, world!", config)
+if err != nil {
+    log.Fatal(err)
+}
+
+// result.Audio contains the synthesized audio bytes
+fmt.Printf("Generated %d bytes of audio\n", len(result.Audio))
+```
+
+### Streaming Text-to-Speech
+
+```go
+// Start streaming synthesis
+chunkCh, err := provider.SynthesizeStream(ctx, "Hello, this is streaming TTS.", config)
+if err != nil {
+    log.Fatal(err)
+}
+
+// Receive audio chunks as they're generated
+for chunk := range chunkCh {
+    if chunk.Error != nil {
+        log.Printf("Error: %v", chunk.Error)
+        break
+    }
+    if len(chunk.Audio) > 0 {
+        // Process or play audio chunk
+        audioPlayer.Write(chunk.Audio)
+    }
+    if chunk.IsFinal {
+        fmt.Println("Synthesis complete")
+    }
+}
+```
+
+### List Available Voices
+
+```go
+voices, err := provider.ListVoices(ctx)
+if err != nil {
+    log.Fatal(err)
+}
+
+for _, voice := range voices {
+    fmt.Printf("%s: %s (%s, %s)\n", voice.ID, voice.Name, voice.Language, voice.Gender)
+}
+```
+
+### Streaming Input from LLM
+
+Stream text from an LLM directly to TTS for low-latency voice responses:
+
+```go
+// Create a pipe to connect LLM output to TTS input
+pr, pw := io.Pipe()
+
+// Start streaming synthesis from the reader
+chunkCh, err := provider.SynthesizeFromReader(ctx, pr, config)
+if err != nil {
+    log.Fatal(err)
+}
+
+// Simulate streaming LLM output in a goroutine
+go func() {
+    defer pw.Close()
+
+    // Write text chunks as they arrive from LLM
+    pw.Write([]byte("Hello! "))
+    pw.Write([]byte("This is streaming from an LLM. "))
+    pw.Write([]byte("Each sentence is synthesized as it arrives."))
+}()
+
+// Receive audio chunks as they're generated
+for chunk := range chunkCh {
+    if chunk.Error != nil {
+        log.Printf("Error: %v", chunk.Error)
+        break
+    }
+    if len(chunk.Audio) > 0 {
+        audioPlayer.Write(chunk.Audio)
+    }
+}
+```
+
 ### With OmniVoice Pipeline
 
-For a complete voice agent example using Deepgram STT with ElevenLabs TTS and Twilio Media Streams, see the [omnivoice-examples](https://github.com/agentplexus/omnivoice-examples) repository.
+For a complete voice agent example using Deepgram STT and TTS with Twilio Media Streams, see the [omnivoice-examples](https://github.com/agentplexus/omnivoice-examples) repository.
 
 ## Supported Audio Formats
 
