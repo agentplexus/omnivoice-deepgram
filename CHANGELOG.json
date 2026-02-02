@@ -8,7 +8,7 @@
   "releases": [
     {
       "version": "v0.2.0",
-      "date": "2026-01-24",
+      "date": "2026-02-02",
       "highlights": [
         { "description": "Text-to-Speech (TTS) provider with streaming support and LLM integration" }
       ],
