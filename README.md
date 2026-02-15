@@ -18,11 +18,11 @@ This table shows which [OmniVoice](https://github.com/agentplexus/omnivoice) abs
 
 | Capability | Supported | Notes |
 |------------|:---------:|-------|
-| **STT (Speech-to-Text)** | ✅ | Primary capability |
+| **STT (Speech-to-Text)** | ✅ | Full capability |
 | STT Streaming | ✅ | Real-time via WebSocket |
-| STT Batch | ❌ | Not yet implemented |
-| STT File | ❌ | Not yet implemented |
-| STT URL | ❌ | Not yet implemented |
+| STT Batch | ✅ | From audio bytes via REST |
+| STT File | ✅ | From file path via REST |
+| STT URL | ✅ | From URL via REST |
 | **TTS (Text-to-Speech)** | ✅ | Aura voices via REST and WebSocket |
 | TTS Synthesize | ✅ | Non-streaming via REST API |
 | TTS Streaming | ✅ | Real-time via WebSocket |
@@ -60,7 +60,7 @@ This table shows which [OmniVoice](https://github.com/agentplexus/omnivoice) abs
 | Transport | Supported | Notes |
 |-----------|:---------:|-------|
 | WebSocket | ✅ | Native streaming transport |
-| HTTP | ❌ | Batch API not yet implemented |
+| HTTP | ✅ | Batch/pre-recorded API |
 | WebRTC | — | Use with transport provider |
 | SIP | — | Use with transport provider |
 | PSTN | — | Use with transport provider |
@@ -106,7 +106,50 @@ go get github.com/agentplexus/omnivoice-deepgram
 
 ## Usage
 
-### Basic Streaming Transcription
+### Batch Transcription (File/URL)
+
+```go
+import (
+    deepgramstt "github.com/agentplexus/omnivoice-deepgram/omnivoice/stt"
+    "github.com/agentplexus/omnivoice/stt"
+)
+
+// Create provider with API key
+provider, err := deepgramstt.New(deepgramstt.WithAPIKey("your-api-key"))
+if err != nil {
+    log.Fatal(err)
+}
+
+config := stt.TranscriptionConfig{
+    Model:    "nova-2",
+    Language: "en-US",
+}
+
+// Transcribe from URL
+result, err := provider.TranscribeURL(ctx, "https://example.com/audio.mp3", config)
+if err != nil {
+    log.Fatal(err)
+}
+
+fmt.Printf("Transcript: %s\n", result.Text)
+fmt.Printf("Duration: %v\n", result.Duration)
+
+// Access word-level timestamps
+for _, segment := range result.Segments {
+    for _, word := range segment.Words {
+        fmt.Printf("%s: %v - %v\n", word.Text, word.StartTime, word.EndTime)
+    }
+}
+
+// Transcribe from file
+result, err = provider.TranscribeFile(ctx, "/path/to/audio.mp3", config)
+
+// Transcribe from bytes
+audioData, _ := os.ReadFile("/path/to/audio.mp3")
+result, err = provider.Transcribe(ctx, audioData, config)
+```
+
+### Streaming Transcription (Real-time)
 
 ```go
 import (
