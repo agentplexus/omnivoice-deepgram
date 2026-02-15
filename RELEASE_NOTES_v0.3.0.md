@@ -15,7 +15,11 @@ This release adds batch transcription support for pre-recorded audio files and U
 
 ## Tests
 
-- Conformance tests updated for batch transcription methods ([`ebcb78b`](https://github.com/agentplexus/omnivoice-deepgram/commit/ebcb78b))
+- `TranscribeFile` and `TranscribeURL` conformance tests with Ferris Bueller test audio ([`35c593e`](https://github.com/agentplexus/omnivoice-deepgram/commit/35c593e))
+
+## Dependencies
+
+- Bump `github.com/agentplexus/omnivoice` from v0.3.0 to v0.4.1 ([`35c593e`](https://github.com/agentplexus/omnivoice-deepgram/commit/35c593e))
 
 ## Documentation
 

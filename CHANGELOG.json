@@ -19,10 +19,13 @@
         { "description": "Pre-recorded transcription conversion helpers for Deepgram responses", "commit": "3fc08dd" }
       ],
       "tests": [
-        { "description": "Conformance tests updated for batch transcription methods", "commit": "ebcb78b" }
+        { "description": "`TranscribeFile` and `TranscribeURL` conformance tests with Ferris Bueller test audio", "commit": "35c593e" }
       ],
       "documentation": [
         { "description": "README updated with batch transcription examples", "commit": "fe09c20" }
+      ],
+      "dependencies": [
+        { "description": "Bump `github.com/agentplexus/omnivoice` from v0.3.0 to v0.4.1", "commit": "35c593e" }
       ]
     },
     {
