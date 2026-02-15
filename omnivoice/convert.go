@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/agentplexus/omnivoice/stt"
+	restinterfaces "github.com/deepgram/deepgram-go-sdk/v3/pkg/api/listen/v1/rest/interfaces"
 	interfaces "github.com/deepgram/deepgram-go-sdk/v3/pkg/client/interfaces"
 )
 
@@ -188,4 +189,135 @@ func itoa(i int) string {
 		i /= 10
 	}
 	return string(b[n:])
+}
+
+// ConfigToPreRecordedOptions converts OmniVoice TranscriptionConfig to Deepgram pre-recorded options.
+func ConfigToPreRecordedOptions(config stt.TranscriptionConfig) *interfaces.PreRecordedTranscriptionOptions {
+	opts := &interfaces.PreRecordedTranscriptionOptions{
+		// Model and language
+		Model:    config.Model,
+		Language: config.Language,
+
+		// Features
+		Punctuate:   config.EnablePunctuation,
+		SmartFormat: true,
+		Utterances:  true, // Always enable for segment boundaries
+	}
+
+	// Set defaults
+	if opts.Model == "" {
+		opts.Model = "nova-2"
+	}
+	if opts.Language == "" {
+		opts.Language = "en-US"
+	}
+
+	// Enable diarization if requested
+	if config.EnableSpeakerDiarization {
+		opts.Diarize = true
+	}
+
+	// Add keywords for boosting
+	if len(config.Keywords) > 0 {
+		opts.Keywords = config.Keywords
+	}
+
+	return opts
+}
+
+// PreRecordedResponseToResult converts a Deepgram PreRecordedResponse to OmniVoice TranscriptionResult.
+func PreRecordedResponseToResult(resp *restinterfaces.PreRecordedResponse) *stt.TranscriptionResult {
+	if resp == nil || resp.Results == nil {
+		return &stt.TranscriptionResult{}
+	}
+
+	result := &stt.TranscriptionResult{}
+
+	// Get duration from metadata
+	if resp.Metadata != nil {
+		result.Duration = time.Duration(resp.Metadata.Duration * float64(time.Second))
+	}
+
+	// Process channels - typically use first channel
+	if len(resp.Results.Channels) > 0 {
+		channel := resp.Results.Channels[0]
+
+		// Detect language if available
+		if channel.DetectedLanguage != "" {
+			result.Language = channel.DetectedLanguage
+			result.LanguageConfidence = channel.LanguageConfidence
+		}
+
+		// Get transcript from first alternative
+		if len(channel.Alternatives) > 0 {
+			alt := channel.Alternatives[0]
+			result.Text = alt.Transcript
+
+			// Convert words to segments
+			if len(alt.Words) > 0 {
+				segment := stt.Segment{
+					Text:       alt.Transcript,
+					Confidence: alt.Confidence,
+				}
+
+				for _, w := range alt.Words {
+					word := stt.Word{
+						Text:       w.Word,
+						StartTime:  time.Duration(w.Start * float64(time.Second)),
+						EndTime:    time.Duration(w.End * float64(time.Second)),
+						Confidence: w.Confidence,
+					}
+					if w.Speaker != nil {
+						word.Speaker = formatSpeaker(*w.Speaker)
+					}
+					segment.Words = append(segment.Words, word)
+				}
+
+				// Set segment timing
+				if len(segment.Words) > 0 {
+					segment.StartTime = segment.Words[0].StartTime
+					segment.EndTime = segment.Words[len(segment.Words)-1].EndTime
+				}
+
+				result.Segments = append(result.Segments, segment)
+			}
+		}
+	}
+
+	// Process utterances if available (better segment boundaries)
+	if len(resp.Results.Utterances) > 0 {
+		// Reset segments to use utterances instead
+		result.Segments = nil
+
+		for _, utt := range resp.Results.Utterances {
+			segment := stt.Segment{
+				Text:       utt.Transcript,
+				StartTime:  time.Duration(utt.Start * float64(time.Second)),
+				EndTime:    time.Duration(utt.End * float64(time.Second)),
+				Confidence: utt.Confidence,
+			}
+
+			if utt.Speaker != nil {
+				segment.Speaker = formatSpeaker(*utt.Speaker)
+			}
+
+			// Add words to segment
+			for _, w := range utt.Words {
+				word := stt.Word{
+					Text:       w.Word,
+					StartTime:  time.Duration(w.Start * float64(time.Second)),
+					EndTime:    time.Duration(w.End * float64(time.Second)),
+					Confidence: w.Confidence,
+				}
+				if w.Speaker != nil {
+					word.Speaker = formatSpeaker(*w.Speaker)
+				}
+				segment.Words = append(segment.Words, word)
+			}
+
+			result.Segments = append(result.Segments, segment)
+		}
+	}
+
+	return result
 }
