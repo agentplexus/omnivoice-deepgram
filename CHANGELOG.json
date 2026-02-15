@@ -1,11 +1,30 @@
 {
-  "ir_version": "1.0",
+  "irVersion": "1.0",
   "project": "omnivoice-deepgram",
   "repository": "https://github.com/agentplexus/omnivoice-deepgram",
   "versioning": "semver",
-  "commit_convention": "conventional",
+  "commitConvention": "conventional",
   "maintainers": ["johncwang@gmail.com"],
   "releases": [
+    {
+      "version": "v0.3.0",
+      "date": "2026-02-14",
+      "highlights": [
+        { "description": "Batch transcription support for pre-recorded audio files and URLs" }
+      ],
+      "added": [
+        { "description": "`Transcribe` method for batch transcription of audio bytes", "commit": "d64c4ea" },
+        { "description": "`TranscribeFile` method for batch transcription of local audio files", "commit": "d64c4ea" },
+        { "description": "`TranscribeURL` method for batch transcription of remote audio URLs", "commit": "d64c4ea" },
+        { "description": "Pre-recorded transcription conversion helpers for Deepgram responses", "commit": "3fc08dd" }
+      ],
+      "tests": [
+        { "description": "Conformance tests updated for batch transcription methods", "commit": "ebcb78b" }
+      ],
+      "documentation": [
+        { "description": "README updated with batch transcription examples", "commit": "fe09c20" }
+      ]
+    },
     {
       "version": "v0.2.0",
       "date": "2026-02-02",
