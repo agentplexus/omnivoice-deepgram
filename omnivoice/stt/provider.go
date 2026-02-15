@@ -2,6 +2,7 @@
 package stt
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -10,7 +11,9 @@ import (
 
 	"github.com/agentplexus/omnivoice-deepgram/omnivoice"
 	"github.com/agentplexus/omnivoice/stt"
+	restapi "github.com/deepgram/deepgram-go-sdk/v3/pkg/api/listen/v1/rest"
 	wsinterfaces "github.com/deepgram/deepgram-go-sdk/v3/pkg/api/listen/v1/websocket/interfaces"
+	interfaces "github.com/deepgram/deepgram-go-sdk/v3/pkg/client/interfaces"
 	client "github.com/deepgram/deepgram-go-sdk/v3/pkg/client/listen"
 )
 
@@ -71,19 +74,68 @@ func (p *Provider) Name() string {
 
 // Transcribe converts audio to text (batch mode).
 func (p *Provider) Transcribe(ctx context.Context, audio []byte, config stt.TranscriptionConfig) (*stt.TranscriptionResult, error) {
-	// For batch transcription, we could use the prerecorded API
-	// For now, return not implemented as streaming is the priority
-	return nil, fmt.Errorf("batch transcription not yet implemented; use TranscribeStream for real-time transcription")
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	// Create REST client
+	c := client.NewREST(p.apiKey, &interfaces.ClientOptions{})
+	dg := restapi.New(c)
+
+	// Convert config to Deepgram options
+	opts := omnivoice.ConfigToPreRecordedOptions(config)
+
+	// Transcribe from stream (bytes)
+	resp, err := dg.FromStream(ctx, bytes.NewReader(audio), opts)
+	if err != nil {
+		return nil, fmt.Errorf("deepgram transcription failed: %w", err)
+	}
+
+	// Convert response to OmniVoice result
+	return omnivoice.PreRecordedResponseToResult(resp), nil
 }
 
 // TranscribeFile transcribes audio from a file path.
 func (p *Provider) TranscribeFile(ctx context.Context, filePath string, config stt.TranscriptionConfig) (*stt.TranscriptionResult, error) {
-	return nil, fmt.Errorf("file transcription not yet implemented")
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	// Create REST client
+	c := client.NewREST(p.apiKey, &interfaces.ClientOptions{})
+	dg := restapi.New(c)
+
+	// Convert config to Deepgram options
+	opts := omnivoice.ConfigToPreRecordedOptions(config)
+
+	// Transcribe from file
+	resp, err := dg.FromFile(ctx, filePath, opts)
+	if err != nil {
+		return nil, fmt.Errorf("deepgram file transcription failed: %w", err)
+	}
+
+	// Convert response to OmniVoice result
+	return omnivoice.PreRecordedResponseToResult(resp), nil
 }
 
 // TranscribeURL transcribes audio from a URL.
 func (p *Provider) TranscribeURL(ctx context.Context, url string, config stt.TranscriptionConfig) (*stt.TranscriptionResult, error) {
-	return nil, fmt.Errorf("URL transcription not yet implemented")
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	// Create REST client
+	c := client.NewREST(p.apiKey, &interfaces.ClientOptions{})
+	dg := restapi.New(c)
+
+	// Convert config to Deepgram options
+	opts := omnivoice.ConfigToPreRecordedOptions(config)
+
+	// Transcribe from URL
+	resp, err := dg.FromURL(ctx, url, opts)
+	if err != nil {
+		return nil, fmt.Errorf("deepgram URL transcription failed: %w", err)
+	}
+
+	// Convert response to OmniVoice result
+	return omnivoice.PreRecordedResponseToResult(resp), nil
 }
 
 // TranscribeStream starts a streaming transcription session.
