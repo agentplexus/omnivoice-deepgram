@@ -15,13 +15,20 @@ package stt
 
 import (
 	"context"
+	"io"
+	"net/http"
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
 	"github.com/agentplexus/omnivoice/stt"
 	"github.com/agentplexus/omnivoice/stt/providertest"
 )
+
+// testAudioURL is Deepgram's public test audio file.
+// "Life moves pretty fast. If you don't stop and look around once in a while, you could miss it."
+const testAudioURL = "https://static.deepgram.com/examples/Bueller-Life-moves-pretty-fast.wav"
 
 func TestConformance(t *testing.T) {
 	apiKey := os.Getenv("DEEPGRAM_API_KEY")
@@ -33,6 +40,9 @@ func TestConformance(t *testing.T) {
 	if err != nil {
 		t.Fatalf("New() error = %v", err)
 	}
+
+	// Download test audio file for TranscribeFile test
+	testAudioFile := downloadTestAudio(t)
 
 	// Generate test audio (1 second of silence at 16kHz mono linear16)
 	// Real tests should use actual speech audio for meaningful results
@@ -50,7 +60,11 @@ func TestConformance(t *testing.T) {
 			Channels:   1,
 			Encoding:   "linear16",
 		},
-		Timeout: 60 * time.Second,
+		// Batch transcription tests
+		TestAudioFile:    testAudioFile,
+		TestAudioURL:     testAudioURL,
+		TestExpectedText: "life moves pretty fast",
+		Timeout:          60 * time.Second,
 	}
 
 	// Run interface tests (always run)
@@ -140,13 +154,16 @@ func TestConformance_BatchOnly(t *testing.T) {
 		t.Fatalf("New() error = %v", err)
 	}
 
-	testAudio := makeTestAudio()
+	// Download test audio file
+	testAudioFile := downloadTestAudio(t)
+	testAudio, err := os.ReadFile(testAudioFile)
+	if err != nil {
+		t.Fatalf("failed to read test audio: %v", err)
+	}
+
 	cfg := stt.TranscriptionConfig{
-		Language:   "en",
-		Model:      "nova-2",
-		SampleRate: 16000,
-		Channels:   1,
-		Encoding:   "linear16",
+		Language: "en",
+		Model:    "nova-2",
 	}
 
 	t.Run("Transcribe", func(t *testing.T) {
@@ -164,9 +181,7 @@ func TestConformance_BatchOnly(t *testing.T) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 
-		// Use Deepgram's public test audio
-		testURL := "https://static.deepgram.com/examples/Bueller-Life-moves-pretty-fast.wav"
-		result, err := p.TranscribeURL(ctx, testURL, cfg)
+		result, err := p.TranscribeURL(ctx, testAudioURL, cfg)
 		if err != nil {
 			t.Fatalf("TranscribeURL() error: %v", err)
 		}
@@ -248,4 +263,34 @@ func TestProviderRequiresAPIKey(t *testing.T) {
 func makeTestAudio() []byte {
 	// 16kHz * 2 bytes per sample * 1 second = 32000 bytes
 	return make([]byte, 32000)
+}
+
+// downloadTestAudio downloads the test audio file to a temp directory.
+func downloadTestAudio(t *testing.T) string {
+	t.Helper()
+
+	resp, err := http.Get(testAudioURL)
+	if err != nil {
+		t.Fatalf("failed to download test audio: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("failed to download test audio: status %d", resp.StatusCode)
+	}
+
+	tmpDir := t.TempDir()
+	filePath := filepath.Join(tmpDir, "test-audio.wav")
+
+	f, err := os.Create(filePath)
+	if err != nil {
+		t.Fatalf("failed to create temp file: %v", err)
+	}
+	defer f.Close()
+
+	if _, err := io.Copy(f, resp.Body); err != nil {
+		t.Fatalf("failed to write test audio: %v", err)
+	}
+
+	return filePath
 }
