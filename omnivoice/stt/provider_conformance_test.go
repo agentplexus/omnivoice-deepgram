@@ -6,8 +6,11 @@
 //	source /path/to/agentcall/.envrc
 //	go test -v -run TestConformance
 //
-// Note: Deepgram STT provider currently only implements streaming transcription.
-// Batch transcription tests will be skipped.
+// The Deepgram STT provider implements both streaming and batch transcription:
+//   - TranscribeStream: Real-time WebSocket streaming
+//   - Transcribe: Batch transcription from audio bytes
+//   - TranscribeFile: Batch transcription from file path
+//   - TranscribeURL: Batch transcription from URL
 package stt
 
 import (
@@ -56,16 +59,12 @@ func TestConformance(t *testing.T) {
 	})
 
 	// Run behavior tests
-	// Note: Deepgram STT doesn't implement batch Transcribe, so behavior tests
-	// will show "not implemented" errors, which is acceptable behavior.
 	t.Run("Behavior", func(t *testing.T) {
 		providertest.RunBehaviorTests(t, cfg)
 	})
 
-	// Run only streaming integration tests since Deepgram STT
-	// focuses on streaming transcription (batch not implemented)
-	t.Run("Integration/TranscribeStream", func(t *testing.T) {
-		// Run TranscribeStream test only
+	// Run integration tests (streaming and batch)
+	t.Run("Integration", func(t *testing.T) {
 		providertest.RunIntegrationTests(t, cfg)
 	})
 }
@@ -90,8 +89,6 @@ func TestConformance_InterfaceOnly(t *testing.T) {
 }
 
 // TestConformance_StreamingOnly runs only streaming integration tests.
-// This is the primary test since Deepgram STT focuses on streaming.
-// This test should pass completely since it only tests implemented features.
 func TestConformance_StreamingOnly(t *testing.T) {
 	apiKey := os.Getenv("DEEPGRAM_API_KEY")
 	if apiKey == "" {
@@ -125,10 +122,61 @@ func TestConformance_StreamingOnly(t *testing.T) {
 		providertest.RunInterfaceTests(t, cfg)
 	})
 
-	// Run streaming integration test directly
-	// Skip behavior tests since they use batch Transcribe which isn't implemented
+	// Run streaming integration test
 	t.Run("Integration/TranscribeStream", func(t *testing.T) {
 		testTranscribeStream(t, p, testAudio, cfg.TestAudioConfig, cfg.Timeout)
+	})
+}
+
+// TestConformance_BatchOnly runs batch transcription tests.
+func TestConformance_BatchOnly(t *testing.T) {
+	apiKey := os.Getenv("DEEPGRAM_API_KEY")
+	if apiKey == "" {
+		t.Skip("DEEPGRAM_API_KEY not set, skipping batch tests")
+	}
+
+	p, err := New(WithAPIKey(apiKey))
+	if err != nil {
+		t.Fatalf("New() error = %v", err)
+	}
+
+	testAudio := makeTestAudio()
+	cfg := stt.TranscriptionConfig{
+		Language:   "en",
+		Model:      "nova-2",
+		SampleRate: 16000,
+		Channels:   1,
+		Encoding:   "linear16",
+	}
+
+	t.Run("Transcribe", func(t *testing.T) {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+
+		result, err := p.Transcribe(ctx, testAudio, cfg)
+		if err != nil {
+			t.Fatalf("Transcribe() error: %v", err)
+		}
+		t.Logf("Transcribe result: %q (segments=%d)", result.Text, len(result.Segments))
+	})
+
+	t.Run("TranscribeURL", func(t *testing.T) {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+
+		// Use Deepgram's public test audio
+		testURL := "https://static.deepgram.com/examples/Bueller-Life-moves-pretty-fast.wav"
+		result, err := p.TranscribeURL(ctx, testURL, cfg)
+		if err != nil {
+			t.Fatalf("TranscribeURL() error: %v", err)
+		}
+		t.Logf("TranscribeURL result: %q (segments=%d)", result.Text, len(result.Segments))
+
+		// Verify we got word timestamps
+		if len(result.Segments) > 0 && len(result.Segments[0].Words) > 0 {
+			w := result.Segments[0].Words[0]
+			t.Logf("First word: %q start=%v end=%v", w.Text, w.StartTime, w.EndTime)
+		}
 	})
 }
 
