@@ -1,5 +1,5 @@
-github.com/agentplexus/omnivoice v0.4.1 h1:orxrZarh6RoRd0krV/u1coqbSf0dP9Atxeip5ANp+Tk=
-github.com/agentplexus/omnivoice v0.4.1/go.mod h1:LfxHfgrgrBg5isbaggYMpnwkN+zrCD1ziQA6StOMvkQ=
+github.com/agentplexus/omnivoice v0.4.3 h1:5Vo0s2MPHyJmV5nzA2NaXkytufBKu9sz6GHljhMjv+s=
+github.com/agentplexus/omnivoice v0.4.3/go.mod h1:LfxHfgrgrBg5isbaggYMpnwkN+zrCD1ziQA6StOMvkQ=
 github.com/deepgram/deepgram-go-sdk/v3 v3.5.0 h1:ug48j1DVNRKrkXti18/aFT3NP5HV2Q2CN3QMwTvHmy4=
 github.com/deepgram/deepgram-go-sdk/v3 v3.5.0/go.mod h1:wVr0PDvlJFWVLUmf65u+K80SJVf/PUWvkFFubGPW/As=
 github.com/dvonthenen/websocket v1.5.1-dyv.2 h1:OXlWJJkeHt8k4+MEI0Y8SQjY2ihHYD2z/tI7sZZfsnA=
