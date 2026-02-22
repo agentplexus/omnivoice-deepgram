@@ -24,9 +24,6 @@ var (
 	_ tts.StreamingProvider = (*Provider)(nil)
 )
 
-// initOnce ensures the Deepgram SDK is initialized only once.
-var initOnce sync.Once
-
 // Provider implements tts.Provider using the Deepgram API.
 type Provider struct {
 	apiKey string
@@ -60,12 +57,8 @@ func New(opts ...Option) (*Provider, error) {
 		return nil, fmt.Errorf("API key is required")
 	}
 
-	// Initialize the Deepgram client library (only once)
-	initOnce.Do(func() {
-		speak.Init(speak.InitLib{
-			LogLevel: speak.LogLevelDefault,
-		})
-	})
+	// Initialize the Deepgram client library (shared across STT/TTS)
+	omnivoice.InitSDK()
 
 	// Create REST client with empty options (not nil)
 	restClient := speak.NewREST(cfg.apiKey, &interfaces.ClientOptions{})

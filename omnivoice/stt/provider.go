@@ -20,9 +20,6 @@ import (
 // Verify interface compliance at compile time.
 var _ stt.StreamingProvider = (*Provider)(nil)
 
-// initOnce ensures the Deepgram SDK is initialized only once.
-var initOnce sync.Once
-
 // Provider implements stt.StreamingProvider using the Deepgram API.
 type Provider struct {
 	apiKey string
@@ -55,12 +52,8 @@ func New(opts ...Option) (*Provider, error) {
 		return nil, fmt.Errorf("API key is required")
 	}
 
-	// Initialize the Deepgram client library (only once)
-	initOnce.Do(func() {
-		client.Init(client.InitLib{
-			LogLevel: client.LogLevelDefault,
-		})
-	})
+	// Initialize the Deepgram client library (shared across STT/TTS)
+	omnivoice.InitSDK()
 
 	return &Provider{
 		apiKey: cfg.apiKey,

@@ -41,8 +41,26 @@
 //	}
 package omnivoice
 
+import (
+	"sync"
+
+	client "github.com/deepgram/deepgram-go-sdk/v3/pkg/client/listen"
+)
+
 // ProviderName is the identifier for the Deepgram provider.
 const ProviderName = "deepgram"
 
 // Version is the version of this OmniVoice adapter.
 const Version = "0.1.0"
+
+// sdkInitOnce ensures the Deepgram SDK is initialized only once across all providers.
+var sdkInitOnce sync.Once
+
+// InitSDK initializes the Deepgram SDK. Safe to call multiple times.
+func InitSDK() {
+	sdkInitOnce.Do(func() {
+		client.Init(client.InitLib{
+			LogLevel: client.LogLevelDefault,
+		})
+	})
+}
