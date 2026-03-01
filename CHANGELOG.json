@@ -1,11 +1,24 @@
 {
   "irVersion": "1.0",
   "project": "omnivoice-deepgram",
-  "repository": "https://github.com/agentplexus/omnivoice-deepgram",
+  "repository": "https://github.com/plexusone/omnivoice-deepgram",
   "versioning": "semver",
   "commitConvention": "conventional",
   "maintainers": ["johncwang@gmail.com"],
   "releases": [
+    {
+      "version": "v0.4.0",
+      "date": "2026-02-28",
+      "highlights": [
+        { "description": "Organization rename from agentplexus to plexusone" }
+      ],
+      "changed": [
+        { "description": "**Breaking**: Module path changed from `github.com/agentplexus/omnivoice-deepgram` to `github.com/plexusone/omnivoice-deepgram`", "commit": "2a6c9ac" }
+      ],
+      "dependencies": [
+        { "description": "Update to `github.com/plexusone/omnivoice-core` v0.5.0 (was agentplexus/omnivoice)", "commit": "2a6c9ac" }
+      ]
+    },
     {
       "version": "v0.3.1",
       "date": "2026-02-22",
