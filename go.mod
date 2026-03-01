@@ -1,10 +1,10 @@
-module github.com/agentplexus/omnivoice-deepgram
+module github.com/plexusone/omnivoice-deepgram
 
 go 1.24.11
 
 require (
-	github.com/agentplexus/omnivoice v0.4.3
 	github.com/deepgram/deepgram-go-sdk/v3 v3.5.0
+	github.com/plexusone/omnivoice-core v0.5.0
 )
 
 require (

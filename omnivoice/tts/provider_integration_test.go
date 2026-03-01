@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/agentplexus/omnivoice/tts"
+	"github.com/plexusone/omnivoice-core/tts"
 )
 
 func getAPIKey(t *testing.T) string {

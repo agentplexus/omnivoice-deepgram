@@ -3,7 +3,7 @@ package omnivoice
 import (
 	"testing"
 
-	"github.com/agentplexus/omnivoice/tts"
+	"github.com/plexusone/omnivoice-core/tts"
 )
 
 func TestConfigToSpeakOptions(t *testing.T) {

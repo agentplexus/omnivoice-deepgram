@@ -3,9 +3,9 @@ package omnivoice
 import (
 	"time"
 
-	"github.com/agentplexus/omnivoice/stt"
 	restinterfaces "github.com/deepgram/deepgram-go-sdk/v3/pkg/api/listen/v1/rest/interfaces"
 	interfaces "github.com/deepgram/deepgram-go-sdk/v3/pkg/client/interfaces"
+	"github.com/plexusone/omnivoice-core/stt"
 )
 
 // ConfigToLiveTranscriptionOptions converts OmniVoice TranscriptionConfig to Deepgram options.

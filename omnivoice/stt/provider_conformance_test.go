@@ -22,8 +22,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/agentplexus/omnivoice/stt"
-	"github.com/agentplexus/omnivoice/stt/providertest"
+	"github.com/plexusone/omnivoice-core/stt"
+	"github.com/plexusone/omnivoice-core/stt/providertest"
 )
 
 // testAudioURL is Deepgram's public test audio file.

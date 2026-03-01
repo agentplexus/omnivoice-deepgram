@@ -1,5 +1,3 @@
-github.com/agentplexus/omnivoice v0.4.3 h1:5Vo0s2MPHyJmV5nzA2NaXkytufBKu9sz6GHljhMjv+s=
-github.com/agentplexus/omnivoice v0.4.3/go.mod h1:LfxHfgrgrBg5isbaggYMpnwkN+zrCD1ziQA6StOMvkQ=
 github.com/deepgram/deepgram-go-sdk/v3 v3.5.0 h1:ug48j1DVNRKrkXti18/aFT3NP5HV2Q2CN3QMwTvHmy4=
 github.com/deepgram/deepgram-go-sdk/v3 v3.5.0/go.mod h1:wVr0PDvlJFWVLUmf65u+K80SJVf/PUWvkFFubGPW/As=
 github.com/dvonthenen/websocket v1.5.1-dyv.2 h1:OXlWJJkeHt8k4+MEI0Y8SQjY2ihHYD2z/tI7sZZfsnA=
@@ -16,6 +14,8 @@ github.com/mattn/go-colorable v0.1.14 h1:9A9LHSqF/7dyVVX6g0U9cwm9pG3kP9gSzcuIPHP
 github.com/mattn/go-colorable v0.1.14/go.mod h1:6LmQG8QLFO4G5z1gPvYEzlUgJ2wF+stgPZH1UqBm1s8=
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
+github.com/plexusone/omnivoice-core v0.5.0 h1:BdmrX3vl9YPdDleWfPVuHfPrwm5DVPJnV3foKVziVTY=
+github.com/plexusone/omnivoice-core v0.5.0/go.mod h1:oFa3AOIKDv9lMd7M0cG1HBZOBKK6H9GAVhi7aiR9nYA=
 golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.41.0 h1:Ivj+2Cp/ylzLiEU89QhWblYnOE9zerudt9Ftecq2C6k=
 golang.org/x/sys v0.41.0/go.mod h1:OgkHotnGiDImocRcuBABYBEXf8A9a87e/uXjp9XT3ks=

@@ -9,12 +9,12 @@ import (
 	"io"
 	"sync"
 
-	"github.com/agentplexus/omnivoice-deepgram/omnivoice"
-	"github.com/agentplexus/omnivoice/stt"
 	restapi "github.com/deepgram/deepgram-go-sdk/v3/pkg/api/listen/v1/rest"
 	wsinterfaces "github.com/deepgram/deepgram-go-sdk/v3/pkg/api/listen/v1/websocket/interfaces"
 	interfaces "github.com/deepgram/deepgram-go-sdk/v3/pkg/client/interfaces"
 	client "github.com/deepgram/deepgram-go-sdk/v3/pkg/client/listen"
+	"github.com/plexusone/omnivoice-core/stt"
+	"github.com/plexusone/omnivoice-deepgram/omnivoice"
 )
 
 // Verify interface compliance at compile time.

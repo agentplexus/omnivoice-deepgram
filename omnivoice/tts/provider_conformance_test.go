@@ -14,7 +14,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/agentplexus/omnivoice/tts/providertest"
+	"github.com/plexusone/omnivoice-core/tts/providertest"
 )
 
 func TestConformance(t *testing.T) {

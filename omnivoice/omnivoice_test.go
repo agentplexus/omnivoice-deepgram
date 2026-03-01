@@ -3,9 +3,9 @@ package omnivoice_test
 import (
 	"testing"
 
-	"github.com/agentplexus/omnivoice-deepgram/omnivoice"
-	"github.com/agentplexus/omnivoice-deepgram/omnivoice/stt"
-	"github.com/agentplexus/omnivoice-deepgram/omnivoice/tts"
+	"github.com/plexusone/omnivoice-deepgram/omnivoice"
+	"github.com/plexusone/omnivoice-deepgram/omnivoice/stt"
+	"github.com/plexusone/omnivoice-deepgram/omnivoice/tts"
 )
 
 // TestDualProviderInstantiation verifies that both STT and TTS providers

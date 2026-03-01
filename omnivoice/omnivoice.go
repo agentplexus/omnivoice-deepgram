@@ -8,8 +8,8 @@
 // For STT (Speech-to-Text):
 //
 //	import (
-//	    "github.com/agentplexus/omnivoice-deepgram/omnivoice/stt"
-//	    "github.com/agentplexus/omnivoice/stt"
+//	    "github.com/plexusone/omnivoice-deepgram/omnivoice/stt"
+//	    "github.com/plexusone/omnivoice-core/stt"
 //	)
 //
 //	// Create provider with API key

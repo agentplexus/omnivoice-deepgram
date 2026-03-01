@@ -1,8 +1,8 @@
 package omnivoice
 
 import (
-	"github.com/agentplexus/omnivoice/tts"
 	interfaces "github.com/deepgram/deepgram-go-sdk/v3/pkg/client/interfaces"
+	"github.com/plexusone/omnivoice-core/tts"
 )
 
 // ConfigToSpeakOptions converts OmniVoice SynthesisConfig to Deepgram SpeakOptions.
